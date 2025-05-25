@@ -1,0 +1,52 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C/C++: (gdb) Launch SBox Test", // Descriptive name for your launch configuration
+            "type": "cppdbg",                       // Use 'cppdbg' for GDB/LLDB
+            "request": "launch",
+            "program": "${fileDirname}/my_sbox_test.exe", // Path to your executable
+                                                       // This assumes 'my_sbox_test.exe' is the output
+                                                       // name from your tasks.json and it's in the
+                                                       // same directory as the file that triggered the debug session.
+                                                       // Or use a more absolute path if needed:
+                                                       // "${workspaceFolder}/TestFiles/share_output/my_sbox_test.exe"
+            "args": [],                             // Command line arguments for your program, if any
+            "stopAtEntry": false,                   // Set to true to stop at the program's entry point (main)
+            "cwd": "${fileDirname}",                // Working directory for the program
+                                                       // Or "${workspaceFolder}/TestFiles/share_output"
+            "environment": [],                      // Environment variables
+            "externalConsole": false,               // false: use VS Code's integrated terminal
+                                                       // true:  launch an external console window (cmd.exe)
+            "MIMode": "gdb",                        // Debugger type: gdb or lldb
+            "miDebuggerPath": "C:\\Users\\nupur\\minGW64\\mingw64\\bin\\gdb.exe", // Full path to gdb.exe
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel", // Optional, personal preference
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: clang.exe build SBox Test Project" // Name of your build task from tasks.json
+                                                                       // This ensures the project is built before debugging.
+        }
+        // You can remove or comment out the "(Windows) Launch" cppvsdbg configuration
+        // if you're not using the MSVC compiler.
+        // {
+        //     "name": "(Windows) Launch",
+        //     "type": "cppvsdbg",
+        //     "request": "launch",
+        //     "program": "enter program name, for example ${workspaceFolder}/a.exe",
+        //     "args": [],
+        //     "stopAtEntry": false,
+        //     "cwd": "${fileDirname}",
+        //     "environment": [],
+        //     "console": "externalTerminal"
+        // }
+    ]
+}

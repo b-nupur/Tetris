@@ -1,0 +1,126 @@
+
+static int A2X[8] = {0x98, 0xF3, 0xF2, 0x48, 0x09, 0x81, 0xA9, 0xFF},
+            X2A[8] = {0x64, 0x78, 0x6E, 0x8C, 0x68, 0x29, 0xDE, 0x60},
+            X2S[8] = {0x58, 0x2D, 0x9E, 0x0B, 0xDC, 0x04, 0x03, 0x24},
+            S2X[8] = {0x8C, 0x79, 0x05, 0xEB, 0x12, 0x04, 0x51, 0x53};
+ 
+ 
+ int G4_mul(int x, int y) {
+   int a, b, c, d, e, p, q;
+ 
+   a = (x & 0x2) >> 1;
+   b = (x & 0x1);
+   c = (y & 0x2) >> 1;
+   d = (y & 0x1);
+   e = (a ^ b) & (c ^ d);
+   p = (a & c) ^ e;
+   q = (b & d) ^ e;
+   return ((p << 1) | q);
+ }
+ 
+ 
+ int G4_scl_N(int x) {
+   int a, b, p, q;
+ 
+   a = (x & 0x2) >> 1;
+   b = (x & 0x1);
+   p = b;
+   q = a ^ b;
+   return ((p << 1) | q);
+ }
+ 
+ 
+ int G4_scl_N2(int x) {
+   int a, b, p, q;
+ 
+   a = (x & 0x2) >> 1;
+   b = (x & 0x1);
+   p = a ^ b;
+   q = a;
+   return ((p << 1) | q);
+ }
+ 
+ 
+ int G4_sq(int x) {
+   int a, b;
+ 
+   a = (x & 0x2) >> 1;
+   b = (x & 0x1);
+   return ((b << 1) | a);
+ }
+ 
+
+ int G16_mul(int x, int y) {
+   int a, b, c, d, e, p, q;
+ 
+   a = (x & 0xC) >> 2;
+   b = (x & 0x3);
+   c = (y & 0xC) >> 2;
+   d = (y & 0x3);
+   e = G4_mul(a ^ b, c ^ d);
+   e = G4_scl_N(e);
+   p = G4_mul(a, c) ^ e;
+   q = G4_mul(b, d) ^ e;
+   return ((p << 2) | q);
+ }
+ 
+
+ int G16_sq_scl(int x) {
+   int a, b, p, q;
+ 
+   a = (x & 0xC) >> 2;
+   b = (x & 0x3);
+   p = G4_sq(a ^ b);
+   q = G4_scl_N2(G4_sq(b));
+   return ((p << 2) | q);
+ }
+ 
+ 
+ int G16_inv(int x) {
+   int a, b, c, d, e, p, q;
+ 
+   a = (x & 0xC) >> 2;
+   b = (x & 0x3);
+   c = G4_scl_N(G4_sq(a ^ b));
+   d = G4_mul(a, b);
+   e = G4_sq(c ^ d);
+   p = G4_mul(e, b);
+   q = G4_mul(e, a);
+   return ((p << 2) | q);
+ }
+ 
+
+ int G256_inv(int x) {
+   int a, b, c, d, e, p, q;
+ 
+   a = (x & 0xF0) >> 4;
+   b = (x & 0x0F);
+   c = G16_sq_scl(a ^ b);
+   d = G16_mul(a, b);
+   e = G16_inv(c ^ d);
+   p = G16_mul(e, b);
+   q = G16_mul(e, a);
+   return ((p << 4) | q);
+ }
+ 
+ 
+ int G256_newbasis(int x, int b[]) {
+   int i, y = 0;
+ 
+   for (i = 7; i >= 0; i--) {
+     if (x & 1)
+       y ^= b[i];
+     x >>= 1;
+   }
+   return (y);
+ }
+ 
+ int Sbox(int n) {
+   int t;
+ 
+   t = G256_newbasis(n, A2X);
+   t = G256_inv(t);
+   t = G256_newbasis(t, X2S);
+   return (t ^ 0x63);
+ }
+ 

@@ -1,0 +1,35 @@
+To Do:
+1. convert the c file into tac. 🎀
+2. run script to inline the c file. 🎀
+3. run and_cloud generator to get the and tree. 🎀
+4. generate the gadget defintion for the d order security. 🎀
+5. get the area and latency of each gadget.
+6. generate the dict for each gadget area latnecy and randomness
+7. run mlrc and mrlc to get the optimisation gadget placement
+8. replace the and operation with the gadgets
+9. pass this file to maskedHLS
+
+
+
+TASK1: 
+CORRECT UTILITY.PY
+
+
+TASK 2
+
+1. correct the and_cloud module 
+
+TASK 3
+1. verify test bench generation module
+
+TASK 4
+1. MLRC ✅
+2. MRLC ✅
+
+# Work done in maskedHLS
+- REMOVED ERROR:
+- Unable to handle files with only one function definition.
+- As the inliner module would remove the function with indegree = 0 so a ast containing just one function definition will be empty.
+
+
+

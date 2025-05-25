@@ -1,0 +1,33 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: clang.exe build SBox Test Project", // More descriptive label
+            "command": "C:\\Users\\nupur\\minGW64\\mingw64\\bin\\clang.exe",
+            "args": [
+                "-fcolor-diagnostics",
+                "-fansi-escape-codes",
+                "-g",
+                // List all your source files here.
+                // Assuming test.c is the one you'd have active, or it's in the same dir.
+                "${fileDirname}\\test.c",    // The file with main()
+                "${fileDirname}\\output.c",  // The file with Sbox() and helpers
+                "-o",
+                "${fileDirname}\\my_sbox_test.exe", // Output executable name
+                "-mconsole"
+            ],
+            "options": {
+                "cwd": "${fileDirname}" // Or "${workspaceFolder}" if your files are in different subdirs
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Builds the SBox test project with test.c and output.c"
+        }
+    ],
+    "version": "2.0.0"
+}
