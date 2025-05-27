@@ -26,6 +26,8 @@ class COMAR(Gadget):
         param_rand = ", ".join([f"int r{i}" for i in range(n)])
         param_prand = ", ".join([f"int r_{i}" for i in range(2 ** n)])
 
+        self.random_required = n + (2 ** n)  # Count the number of random variables
+        self.latency = 2  # Set the latency for the COMAR gadget
         param_str = f"{params}, {param_c}, {param_rand}, {param_prand}" # function parameter list 
         # # random number 
 

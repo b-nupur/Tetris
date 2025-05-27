@@ -29,6 +29,9 @@ class HPC2(Gadget):
 
         param_str = f"{param_a}, {param_b}, {param_c}, {param_rand}" # function parameter list 
         # random number 
+
+        # latency = 2 for HPC2
+        self.latency = 2  # Set the latency for the HPC2 gadget
         helper_func = f"""
 void hpc2_same_shares_{d}_order(int a_share, int b_share, int * u_share) {{
     int b_share_reg;

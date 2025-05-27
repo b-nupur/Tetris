@@ -1,0 +1,6 @@
+1. write a script to run design compiler and extra area
+cd 
+2. populate the table
+3. make mlrc and mrlc generic 
+4. test varilog files
+5. automatic verilog generation

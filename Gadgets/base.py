@@ -19,6 +19,7 @@ class Gadget(ABC):
     @abstractmethod
     def generate_multiply_function(self):
         pass
+    
     @staticmethod
     def generate_and_write_function(class_type, d, filename_prefix, output_folder="gadget_output"):
         script_dir = os.path.dirname(os.path.abspath(__file__))

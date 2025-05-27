@@ -32,4 +32,26 @@ TASK 4
 - As the inliner module would remove the function with indegree = 0 so a ast containing just one function definition will be empty.
 
 
+$$$$$$$$$$$$$$
+TO DO:
+
+Need to fix the area and latency and randomness in the gadget.
+
+1. randomness for each gadget have a formula
+2. latnecy is constant for each of the gadget
+3. area is computed through design compiler
+ The area needs to be computed using the design compiler 
+ How to run a design compiler:
+
+1. login to the server.
+2. enter the password 
+3. modify the file
+
+ check if the table is populated correclty
+
+
+
+ 
+
+
 

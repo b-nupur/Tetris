@@ -1,0 +1,10 @@
+{
+    "topModule": "HPC3",
+    "inputFile": "C:\\Users\\nupur\\Desktop\\mtp_tetris\\Gadgets\\gadget_output\\HPC3_generated.c",
+    "generatedRtl": "C:\\Users\\nupur\\Desktop\\mtp_tetris\\Gadgets\\gadget_verilog\\HPC3_generated.v",
+    "bitWidth": 8,
+    "inlinerOutput": "./tempFiles/inlinerOut.c",
+    "retimedOutput": "./tempFiles/retimedOut.c",
+    "postProcessorOutput": "./tempFiles/postProcessedOut.c",
+    "checkBalancing": 0
+}

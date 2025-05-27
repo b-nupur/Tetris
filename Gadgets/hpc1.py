@@ -25,7 +25,7 @@ class HPC1(Gadget):
         param_c = ", ".join([f"int* {var_c}{i}" for i in range(d + 1)])
 
 
-        param_rand_list = [f"int r{i}" for i in range(d + 1)]
+        param_rand_list = [f"int r{i}" for i in range(d)]
         param_prand_list = [f"int p{i}{j}" for i in range(d) for j in range(i + 1, d + 1)]
 
         # Convert to string format
@@ -35,7 +35,9 @@ class HPC1(Gadget):
         # Count total random variables
         num_rand_vars = len(param_rand_list)
         num_prand_vars = len(param_prand_list)
+        
         self.random = num_rand_vars + num_prand_vars
+        self.latency = 2  # Set the latency for the HPC1 gadget
 
         param_str = f"{param_a}, {param_b}, {param_c}, {param_rand}, {param_prand}" # function parameter list 
         # # random number 
@@ -71,6 +73,8 @@ void hpc1_cross_domain_{d}_order(int a_share, int b_share, int * v_share, int ra
         # generating decalarations for u_ij
         body_lines.append(f"\t\tint {', '.join([f'v{i}{j}' for i in range(d + 1) for j in range(d+1)])};\n") 
         # body_lines.append(f"\t\tint {', '.join([f'v{i}{j}' for i in range(d + 1) for j in range(d+1) if i != j])};\n")
+        body_lines.append(f"\t\tint r{d};\n")
+        body_lines.append(f"\t\tr{d} = {' ^ '. join([f'r{i}' for i in range(d)])};\n")
         
         for i in range(d + 1):
             for j in range(d+1):

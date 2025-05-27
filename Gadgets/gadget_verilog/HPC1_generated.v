@@ -8,7 +8,6 @@ module HPC1(
     b2,
     r0,
     r1,
-    r2,
     p01,
     p02,
     p12,
@@ -26,7 +25,6 @@ module HPC1(
     input  [7:0] b2;
     input  [7:0] r0;
     input  [7:0] r1;
-    input  [7:0] r2;
     input  [7:0] p01;
     input  [7:0] p02;
     input  [7:0] p12;
@@ -43,10 +41,10 @@ module HPC1(
     wire [7:0] b2_inp;
     wire [7:0] r0_inp;
     wire [7:0] r1_inp;
-    wire [7:0] r2_inp;
     wire [7:0] p01_inp;
     wire [7:0] p02_inp;
     wire [7:0] p12_inp;
+    wire [7:0] r2;
     reg [7:0] b_share__hpc1_same_shares_2_order0;
     reg [7:0] a0_inp_reg;
     wire [7:0] v00;
@@ -92,10 +90,10 @@ module HPC1(
     assign b2_inp = b2;
     assign r0_inp = r0;
     assign r1_inp = r1;
-    assign r2_inp = r2;
     assign p01_inp = p01;
     assign p02_inp = p02;
     assign p12_inp = p12;
+    assign r2 = (r0_inp ^ r1_inp);
     assign v00 = (a0_inp_reg & b_share__hpc1_same_shares_2_order0);
     assign a_and_b_hpc1_cross_domain_2_order0 = (a0_inp_reg & b_share__hpc1_cross_domain_2_order0);
     assign v01 = (a_and_b_hpc1_cross_domain_2_order0 ^ p01_inp_reg);
@@ -123,17 +121,17 @@ module HPC1(
         a0_inp_reg <= a0_inp;
         b_share__hpc1_cross_domain_2_order0 <= (b1_inp ^ r1_inp);
         p01_inp_reg <= p01_inp;
-        b_share__hpc1_cross_domain_2_order1 <= (b2_inp ^ r2_inp);
+        b_share__hpc1_cross_domain_2_order1 <= (b2_inp ^ r2);
         p02_inp_reg <= p02_inp;
         b_share__hpc1_cross_domain_2_order2 <= (b0_inp ^ r0_inp);
         a1_inp_reg <= a1_inp;
         b_share__hpc1_same_shares_2_order1 <= (b1_inp ^ r1_inp);
-        b_share__hpc1_cross_domain_2_order3 <= (b2_inp ^ r2_inp);
+        b_share__hpc1_cross_domain_2_order3 <= (b2_inp ^ r2);
         p12_inp_reg <= p12_inp;
         b_share__hpc1_cross_domain_2_order4 <= (b0_inp ^ r0_inp);
         a2_inp_reg <= a2_inp;
         b_share__hpc1_cross_domain_2_order5 <= (b1_inp ^ r1_inp);
-        b_share__hpc1_same_shares_2_order2 <= (b2_inp ^ r2_inp);
+        b_share__hpc1_same_shares_2_order2 <= (b2_inp ^ r2);
         c0 <= z159_assgn159;
         c1 <= z163_assgn163;
         c2 <= z167_assgn167;

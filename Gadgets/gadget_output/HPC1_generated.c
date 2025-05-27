@@ -22,8 +22,10 @@ void hpc1_cross_domain_2_order(int a_share, int b_share, int * v_share, int rand
 }
 
         
-void HPC1(int a0, int a1, int a2, int b0, int b1, int b2, int* c0, int* c1, int* c2, int r0, int r1, int r2, int p01, int p02, int p12){
+void HPC1(int a0, int a1, int a2, int b0, int b1, int b2, int* c0, int* c1, int* c2, int r0, int r1, int p01, int p02, int p12){
 		int v00, v01, v02, v10, v11, v12, v20, v21, v22;
+		int r2;
+		r2 = r0 ^ r1;
 		hpc1_same_shares_2_order(a0, b0, r0, &v00);
 		hpc1_cross_domain_2_order(a0, b1, &v01 , r1, p01);
 		hpc1_cross_domain_2_order(a0, b2, &v02 , r2, p02);

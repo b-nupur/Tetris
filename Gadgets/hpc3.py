@@ -36,6 +36,7 @@ class HPC3(Gadget):
 
         # Assign total random variables count
         self.random_required = len(param_rand_list) + len(param_prand_list)
+        self.latency = 1  # Set the latency for the HPC3 gadget
         
         # print(f"random required : {self.random_required}") 
         param_str = f"{param_a}, {param_b}, {param_c}, {param_rand}, {param_prand}" # function parameter list 

@@ -19,6 +19,10 @@ class Domand(Gadget):
             # The inner loop for j, starting from i+1 to ensure i < j
             for j in range(i + 1, d + 1): # j goes from i+1 to d
                 param_rand.append(f"int r{i}{j}")
+
+        self.random_required = len(param_rand)  # Count the number of random variables
+        self.latency = 1 # latency for Domand is 1
+
         param_rand = ", ".join(param_rand)  # Convert list to string
         param_str = f"{param_a}, {param_b}, {param_c}, {param_rand}" # function parameter list 
         self.random_required = len(param_rand)
