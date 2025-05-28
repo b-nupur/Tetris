@@ -69,6 +69,7 @@ class GenerateDFG(cast.NodeVisitor):
         @see extract_left_and_right_operands
         @see constructOperandMap
         """
+        print(f"[DEBUG] Visiting Assignment Node: {self.gen.visit(node)}")
         curr_index = self.dfg.add_node(ASTGraphNode(node))
         existing_nodes = self.dfg.node_indices()
         if isinstance(node.lvalue,cast.UnaryOp):

@@ -36,7 +36,7 @@ class HPC1(Gadget):
         num_rand_vars = len(param_rand_list)
         num_prand_vars = len(param_prand_list)
         
-        self.random = num_rand_vars + num_prand_vars
+        self.random_required = num_rand_vars + num_prand_vars
         self.latency = 2  # Set the latency for the HPC1 gadget
 
         param_str = f"{param_a}, {param_b}, {param_c}, {param_rand}, {param_prand}" # function parameter list 
@@ -74,8 +74,29 @@ void hpc1_cross_domain_{d}_order(int a_share, int b_share, int * v_share, int ra
         body_lines.append(f"\t\tint {', '.join([f'v{i}{j}' for i in range(d + 1) for j in range(d+1)])};\n") 
         # body_lines.append(f"\t\tint {', '.join([f'v{i}{j}' for i in range(d + 1) for j in range(d+1) if i != j])};\n")
         body_lines.append(f"\t\tint r{d};\n")
-        body_lines.append(f"\t\tr{d} = {' ^ '. join([f'r{i}' for i in range(d)])};\n")
+        # body_lines.append(f"\t\tr{d} = {' ^ '. join([f'r{i}' for i in range(d)])};\n")
         
+        temp_var_counter = 0  # Start from t1
+        body_lines.append(f"\t\tint {', '.join([f't{i}' for i in range(d-2)])};\n")
+        
+        for i in range(d):
+            if d == 1:
+                body_lines.append(f"\t\tr{i+1} = r{i};\n")
+            elif d == 2:
+                body_lines.append(f"\t\tr{2} = r{0} ^ r{1};\n")
+            else:
+                if i == 0:
+                    body_lines.append(f"\t\tt{temp_var_counter} = r{0} ^ r{1};\n")
+                    temp_var_counter += 1
+                elif i == 1:
+                    continue                
+                elif i < d - 1:
+                    body_lines.append(f"\t\tt{temp_var_counter} = t{temp_var_counter-1} ^ r{i};\n")
+                    temp_var_counter += 1
+                else:
+                    body_lines.append(f"\t\tr{d} = t{temp_var_counter-1} ^ r{i};\n")
+                    
+
         for i in range(d + 1):
             for j in range(d+1):
                 if i == j:
@@ -85,7 +106,6 @@ void hpc1_cross_domain_{d}_order(int a_share, int b_share, int * v_share, int ra
                     body_lines.append(f"\t\thpc1_cross_domain_{d}_order({var_a}{i}, {var_b}{j}, &v{i}{j} , r{j}, {p_param});\n")
 
     
-        temp_var_counter = 1  # Start from t1
         temp_vars = []  # Store temp variable names
 
         #  Allocate (d + 1) * (d + 1) temp variables

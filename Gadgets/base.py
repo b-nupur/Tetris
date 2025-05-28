@@ -21,15 +21,13 @@ class Gadget(ABC):
         pass
     
     @staticmethod
-    def generate_and_write_function(class_type, d, filename_prefix, output_folder="gadget_output"):
+    def generate_and_write_function(gadget_instance, filename_prefix, output_folder="gadget_output"):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         output_path = os.path.join(script_dir, output_folder)
         os.makedirs(output_path, exist_ok=True)
-        try:
-            instance = class_type(d)
-        except:
-            instance = class_type()
-        function_def = instance.generate_multiply_function()
+  
+        function_def = gadget_instance.generate_multiply_function()
+        
         c_filename = os.path.join(output_path, f"{filename_prefix}_generated.c")
 
         with open(c_filename, "w") as f:

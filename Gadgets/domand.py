@@ -25,7 +25,6 @@ class Domand(Gadget):
 
         param_rand = ", ".join(param_rand)  # Convert list to string
         param_str = f"{param_a}, {param_b}, {param_c}, {param_rand}" # function parameter list 
-        self.random_required = len(param_rand)
         function_signature = f"void Domand({param_str})"
 
         body_lines = []

@@ -218,13 +218,25 @@ def run_maskedHLS(top_module, input_file, rtl_file, bit_width,script_path="./Mas
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True, cwd=script_dir)
         print("[INFO] Script output:\n", result.stdout)
-    
+
+        # extracting the latency of the design 
+        import re
+        match = re.search(r"Max path weight\s*(\d+)", result.stdout)
+        if match:
+            latency = int(match.group(1))
+            # print(f"[INFO] : Latency of the design: {latency}")
+            
+        else:
+            print("[WARNING] : Latency not found in script output.")
+
+
     except subprocess.CalledProcessError as e:
         print("[ERROR] : Script failed:\n", e.stderr)
         print("[ERROR] : stdout (if any):\n", e.stdout) # Print stdout too, it might have clues
     except FileNotFoundError:
         print(f"[ERROR] : Python interpreter or script '{script_abs_path}' not found. Check paths.")
 
+    return latency if latency else None
 # 3. generate and_tree 
 def generator_and_cloud(filename):
     print(f"[INFO] : Generating the AND tree ...")
@@ -351,10 +363,10 @@ if __name__ == "__main__":
             d INTEGER PRIMARY KEY
                 )
     ''')
-    for table in ["hpc1", "hpc2", "hpc3", "comar"]:
+    for table in ["hpc1", "hpc2", "hpc3", "comar", "domand"]:
         cur.execute(f'''
             CREATE TABLE IF NOT EXISTS {table}(
-                d INTEGER,
+                d INTEGER PRIMARY KEY,
                 latency INTEGER,
                 randomness INTEGER,
                 area INTEGER,
@@ -375,9 +387,44 @@ if __name__ == "__main__":
     #     cur.execute("INSERT INTO hpc3 (d, latency, randomness, area) VALUES (?, ?, ?, ?)",(1, 1, 2, 3))
 
     #     cur.execute("INSERT INTO comar (d, latency, randomness, area) VALUES (?, ?, ?, ?)",(1, 2, 6, 4))
-    
+
     cur.execute(f"SELECT * FROM gadget WHERE d = {d}")
     row = cur.fetchone()
+
+
+    # check the contents of the tabkes in the database
+    print("[INFO] : Gadget Table Contents:")
+
+    tables = ["gadget", "hpc1", "hpc2", "hpc3", "comar", "domand"]
+    
+    # for d in [1, 2, 3]:
+    #     cur.execute(f"INSERT OR IGNORE INTO gadget (d) VALUES (?)", (d,))
+    
+    # data = {
+    #     'hpc1' : [(1,2,2,),(2,2,5),(3,2,9)],
+    #     'hpc2' :[(1,2,1,),(2,2,3),(3,2,6)],
+    #     'hpc3' : [(1,1,2,),(2,1,6),(3,1,12)],
+    #     'comar' : [(1,2,6,)],
+    #     'domand' : [(1,2,1,),(2,1,3),(3,1,6)],
+    # }
+
+    # for table, entries in data.items():
+    #     for entry in entries:
+    #         cur.execute(f"INSERT OR IGNORE INTO {table} (d, latency, randomness, area) VALUES (?, ?, ?, ?)", (entry[0], entry[1], entry[2], entry[3]))
+
+    for table in tables:
+        print(f"\nTable: {table}")
+        # cur.execute(f"DELETE FROM {table}")
+        cur.execute(f"SELECT * FROM {table}")
+
+        column_names = [description[0] for description in cur.description]
+        print(" | ".join(column_names))
+        print("-" * 50)
+        rows = cur.fetchall()
+        for r in rows:
+            print(r)
+    conn.commit()
+    conn.close()
     
     # if row is not none fetch the values form table
     # if row is none call the gadget definition and populate the row of table
@@ -387,12 +434,31 @@ if __name__ == "__main__":
         print("[INFO] : Generating gadget definition..")
         
         # generate gadget definition 
-        Gadget.generate_and_write_function(HPC2, d=d, filename_prefix="HPC2")
-        Gadget.generate_and_write_function(HPC1, d=d, filename_prefix="HPC1")
-        Gadget.generate_and_write_function(HPC3, d=d, filename_prefix="HPC3")
-        Gadget.generate_and_write_function(COMAR,d=d, filename_prefix="Comar")
-        Gadget.generate_and_write_function(Domand, d=d, filename_prefix="Domand")
+        HPC2_obj = HPC2(d=d)
+        HPC2_obj.generate_and_write_function(HPC2_obj, filename_prefix="HPC2")
+        # create object of HPC2 and get randomness.
+        randomness_HPC2 = HPC2_obj.get_random_count()
+        print(f"[INFO] : Randomness of HPC2: {randomness_HPC2}")
+        
+        HPC1_obj = HPC1(d=d)
+        HPC1_obj.generate_and_write_function(HPC1_obj, filename_prefix="HPC1")
+        randomness_HPC1 = HPC1_obj.get_random_count()
 
+        print(f"[INFO] : Randomness of HPC1: {randomness_HPC1}")
+        HPC3_obj = HPC3(d=d)
+        HPC3_obj.generate_and_write_function(HPC3_obj, filename_prefix="HPC3")
+        randomness_HPC3 = HPC3_obj.get_random_count()
+        print(f"[INFO] : Randomness of HPC3: {randomness_HPC3}")
+
+        COMAR_obj = COMAR()
+        COMAR_obj.generate_and_write_function(COMAR_obj, filename_prefix="Comar")
+        randomness_COMAR = COMAR_obj.get_random_count()
+        print(f"[INFO] : Randomness of COMAR: {randomness_COMAR}")
+        
+        Domand_obj = Domand(d=d)
+        Domand_obj.generate_and_write_function(Domand_obj, filename_prefix="Domand")
+        randomness_Domand = Domand_obj.get_random_count()
+        print(f"[INFO] : Randomness of Domand: {randomness_Domand}")
 
         print(f"[INFO] : Gadget Definition written to {os.path.abspath(r".\Gadgets\gadget_output")}\n")
         # # pass the generated c files into the masked HLS to get verilog 
@@ -406,7 +472,9 @@ if __name__ == "__main__":
             rtl_file = filename.replace(".c", ".v")
             filename= os.path.abspath(f"./Gadgets/gadget_output/{filename}")
             #print(f"filename {filename}")
-            run_maskedHLS(top_module=top_module,input_file=filename, rtl_file=rtl_file,bit_width=8)
+            latnecy = run_maskedHLS(top_module=top_module,input_file=filename, rtl_file=rtl_file,bit_width=8)
+            if latnecy is not None:
+                print(f"[INFO] : Latency of the design: {latnecy}")
             # call design compiler to get the area and latency of the design
             # latnecy and rnadomness is already with us just need area
             
