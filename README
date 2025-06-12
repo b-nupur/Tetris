@@ -1,57 +1,41 @@
-To Do:
-1. convert the c file into tac. 🎀
-2. run script to inline the c file. 🎀
-3. run and_cloud generator to get the and tree. 🎀
-4. generate the gadget defintion for the d order security. 🎀
-5. get the area and latency of each gadget.
-6. generate the dict for each gadget area latnecy and randomness
-7. run mlrc and mrlc to get the optimisation gadget placement
-8. replace the and operation with the gadgets
-9. pass this file to maskedHLS
+## Setup and Installation
 
+### Prerequisites
 
+1.  **Python 3.x:**
+    *   This project is developed with Python 3.x (e.g., Python 3.13 or specify your version).
+    *   Ensure Python is installed and accessible from your command line. You can download it from [python.org](https://www.python.org/) or use a package manager like Homebrew (`brew install python`).
 
-TASK1: 
-CORRECT UTILITY.PY
+2.  **Graphviz (System Installation):**
+    *   **Crucial Prerequisite:** The Graphviz software suite must be installed on your system. This provides the `dot` command-line tool, which is essential for generating graph visualizations used in this project (e.g., for AND-trees). The Python `graphviz` package (listed in `requirements.txt`) is an interface to this system-level installation.
+    *   **Installation Instructions:**
+        *   **macOS (using Homebrew):**
+            ```bash
+            brew install graphviz
+            ```
+        *   **Linux (e.g., Debian/Ubuntu):**
+            ```bash
+            sudo apt-get update
+            sudo apt-get install graphviz
+            ```
+        *   **Windows:** Download the installer from the [Graphviz official website](https://graphviz.org/download/#windows). During installation, ensure you opt to add Graphviz to the system PATH.
+        *   **Other Systems:** Please refer to the [Graphviz Download Page](https://graphviz.org/download/#executable-packages).
+    *   **Verification:** After installation, open a **new** terminal window/tab and run the command:
+        ```bash
+        dot -V
+        ```
+        This should print the version of Graphviz installed (e.g., `dot - graphviz version X.Y.Z ...`). If the command is not found, ensure Graphviz's `bin` directory is in your system's PATH environment variable.
 
-
-TASK 2
-
-1. correct the and_cloud module 
-
-TASK 3
-1. verify test bench generation module
-
-TASK 4
-1. MLRC ✅
-2. MRLC ✅
-
-# Work done in maskedHLS
-- REMOVED ERROR:
-- Unable to handle files with only one function definition.
-- As the inliner module would remove the function with indegree = 0 so a ast containing just one function definition will be empty.
-
-
-$$$$$$$$$$$$$$
-TO DO:
-
-Need to fix the area and latency and randomness in the gadget.
-
-1. randomness for each gadget have a formula
-2. latnecy is constant for each of the gadget
-3. area is computed through design compiler
- The area needs to be computed using the design compiler 
- How to run a design compiler:
-
-1. login to the server.
-2. enter the password 
-3. modify the file
-
- check if the table is populated correclty
-
-
-
- 
-
-
+3.  **C Preprocessor / C Compiler (for `pycparser`):**
+    *   The `pycparser` Python package, used for parsing C code, requires a C preprocessor (e.g., `cpp`) and a C compiler (e.g., `gcc` or `clang`) to be available in your system's PATH.
+    *   **Installation Instructions:**
+        *   **macOS:** Usually available via Xcode Command Line Tools. If not installed, run:
+            ```bash
+            xcode-select --install
+            ```
+        *   **Linux (e.g., Debian/Ubuntu):**
+            ```bash
+            sudo apt-get install build-essential
+            ```
+        *   **Windows:** Typically installed with a C compiler suite like MinGW-w64 or MSVC (Visual Studio). Ensure the compiler's `bin` directory is in the PATH.
 
